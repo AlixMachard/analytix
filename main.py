@@ -19,7 +19,8 @@ Your script MUST conclude by assigning a JSON dictionary which will be loadable.
 It also needs to have in a "data" section, the values that will be needed to answer the query. And finally, x and y values need to be precised so we will create a chart from it. You have to generate the values of the DataFrame not python code.
 Here are some examples of result:
 - {{"plot_title": "Number of available bikes per day", "plot_type": "line", "data": {{'days': {{str(index): date for index, date in enumerate(list(df["day"]))}},'available_bikes': df["available_bikes"].to_dict()}}, "x": "days", "y": "available_bikes"}}
--{{"plot_title": "Trips per user per day", "plot_type": "bar", "data": {{'days': df["day"].to_dict(),'trips_per_user': {{i: round(val, 2) for i, val in enumerate(df['trips_per_user'])}}}}, "x": "days", "y": "trips_per_user"}}
+- {{"plot_title": "Trips per user per day", "plot_type": "bar", "data": {{'days': df["day"].to_dict(),'trips_per_user': {{i: round(val, 2) for i, val in enumerate(df['trips_per_user'])}}}}, "x": "days", "y": "trips_per_user"}}
+- {{"plot_title": "Number of bikes in need of warehouse per day compared to available bikes", "plot_type": "bar", "data": {{'days': df["day"].to_dict(),'Need_Warehouse': df["Need_Warehouse"].to_dict(), "available_bikes": df["available_bikes"].to_dict()}}, "x": "days", "y": ["need_warehouse", "available"]}}
 
 **Important Notes:**
 - Not all DataFrame columns may be relevant for answering the specific QUERY. Focus only on the necessary ones.
@@ -46,9 +47,8 @@ from utils import setup_data
 df = setup_data()"""
 
 # "How many trips per user do we have per day in average ?"
-user_query = (
-    "How many bikes in need warehouse do we have per day compare to available bikes ?"
-)
+# "How many bikes in need warehouse do we have per day compare to available bikes ?"
+user_query = "Plot bikes per maintenance state per month"
 prompt = [
     {"content": prompt_system, "role": "system"},
     {"content": user_query, "role": "user"},
@@ -74,7 +74,7 @@ df = df.reset_index()
 df["day"] = pd.to_datetime(df["day"])
 
 df = df.sort_values(by="day")
-df["day"] = df["day"].dt.strftime("%Y-%m-%d")
+# df["day"] = df["day"].dt.strftime("%Y-%m-%d")
 
 local_vars = {}
 exec(generated_json, globals(), local_vars)

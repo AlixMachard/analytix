@@ -22,6 +22,7 @@ def generate_chart_from_data(json_data):
 import plotly.graph_objs as go
 import json
 import os
+import uuid
 
 def create_chart(data):
     data = json.loads(data)
@@ -41,7 +42,8 @@ def create_chart(data):
 
     if not os.path.exists("images"):
         os.mkdir("images")
-    fig.write_image("images/fig1.png")
+    random_name = uuid.uuid4()
+    fig.write_image(f"images/{random_name}.png")
 
 create_chart('''{{ data_json }}''')"""
 
