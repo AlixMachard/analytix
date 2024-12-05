@@ -7,12 +7,10 @@ import re
 
 
 def convert_to_proper_json_like_string(data_string):
-    # Add double quotes around any sequence of characters that is followed by a colon
-    data_string = re.sub(r"(?<=\b)(\w+)(?=\s*:)", r'"\1"', data_string)
-
-    # Add double quotes around numerical keys
-    data_string = re.sub(r'(?<="{)\b(\d+)\b(?=":)', r'"\1"', data_string)
-
+    # Use regex to find dictionary keys that are integers and not enclosed in quotes
+    data_string = re.sub(r'(?<=\{)(\d+)(?=:)', r'"\1"', data_string)
+    data_string = re.sub(r'(?<=, )(\d+)(?=:)', r'"\1"', data_string)
+    
     return data_string
 
 
@@ -30,14 +28,17 @@ def create_chart(data):
     x = data.get("x")
     y = data.get("y")
     {% if chart_type == 'bar' %}
-    for i in y:
-        fig.add_trace(go.Bar(x=list(data.get("data").get(x).values()), y=list(data.get("data").get(i).values())))
+    if isinstance(y, list):
+        for i in y:
+            fig.add_trace(go.Bar(x=list(data.get("data").get(x).values()), y=list(data.get("data").get(i).values())))
+    else:
+            fig.add_trace(go.Bar(x=list(data.get("data").get(x).values()), y=list(data.get("data").get(y).values())))
     {% elif chart_type == 'line' %}
     fig.add_trace(go.Scatter(x=list(data.get("data").get(x).values()), y=list(data.get("data").get(y).values()), mode='lines+markers'))
     {% elif chart_type == 'scatter' %}
     fig.add_trace(go.Scatter(x=list(data.keys()), y=list(data.values()), mode='markers'))
     {% endif %}
-    fig.update_layout(title='{{ chart_title }}', xaxis_title=x, yaxis_title="hello")
+    fig.update_layout(title='{{ chart_title }}', xaxis_title=x, yaxis_title=y)
     # fig.show()
 
     if not os.path.exists("images"):

@@ -37,10 +37,11 @@ def preprocess_csv_data(file_paths: List[str]) -> pd.DataFrame:
 
 def setup_data() -> pd.DataFrame:
     data_files = [
-        "prod_2023/prod_01_2023.csv",
-        "prod_2023/prod_02_2023.csv",
-        "prod_2023/prod_03_2023.csv",
-        "prod_2023/prod_04_2023.csv",
+        "data/imdb/IMDB_Movies_Dataset.csv"
+        # "data/prod_2023/prod_01_2023.csv",
+        # "data/prod_2023/prod_02_2023.csv",
+        # "data/prod_2023/prod_03_2023.csv",
+        # "data/prod_2023/prod_04_2023.csv",
         # "prod_2023/prod_05_2023.csv",
         # "prod_2023/prod_06_2023.csv",
         # "prod_2023/prod_07_2023.csv",
